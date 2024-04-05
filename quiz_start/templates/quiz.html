@@ -1,90 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Django Quiz App</title>
-  </head>
-  <body>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
 
-    <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.prod.js"></script>
-<div id="app">
-  <ul>
-    <div class="container mt-5 pt-5">
-        <div class="col-md-6 mx-auto">
+<script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.prod.js"></script>
 
-
-                <h3>Give Quiz</h3>
-                <div v-for="question in questions">
+<div id="app" class="container mt-5 pt-5">
+    <div class="col-md-6 mx-auto">
+        <h3 v-if="questions.length === 0">Loading...</h3>
+        <template v-else>
+            <div v-if="currentIndex < questions.length">
                 <hr>
-                <p>[[question.question]]</p>
-
-            <div class="form-check" v-for="answer in question.answer">
-                <input @change="checkAnswer($event, question.uid)" :value="answer.answer" class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                <label class="form-check-label" for="flexRadioDefault1">
-                  [[answer.answer]]
-                </label>
-              </div>
-
-
+                <p>[[ questions[currentIndex].question ]]</p>
+                <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
+                    <input @change="selectAnswer(answer.uid)" class="form-check-input" type="radio" :id="'answer-' + answer.uid" name="answers[]" :value="answer.uid">
+                    <label class="form-check-label" :for="'answer-' + answer.uid">[[ answer.answer ]]</label>
+                </div>
+                <button @click="nextQuestion" class="btn btn-primary mt-3">Next</button>
             </div>
-               </div>
-        </div>
-    <!-- <li v-for="task in tasks">[[task]]</li> -->
-  </ul>
+            <div v-else>
+                <p>No more questions</p>
+                <button @click="submitQuiz" class="btn btn-success mt-3">Submit Quiz</button>
+            </div>
+        </template>
+    </div>
 </div>
-  <script>
+<script>
     const app = Vue.createApp({
-        el: '#app',
         delimiters: ['[[', ']]'],
         data() {
-          return {
-            questions :[]
-                   }
+            return {
+                questions: [],
+                currentIndex: 0,
+                selectedAnswers: []
+            };
         },
-        methods : {
-            getQuestions(){
-                var _this = this
+        methods: {
+            getQuestions() {
                 fetch(`/api/get-quiz/`)
-                .then(response => response.json())
-                .then(result =>{
-                    console.log(result)
-                    _this.questions = result.data
-                })
+                    .then(response => response.json())
+                    .then(result => {
+                        this.questions = result.data;
+                    });
             },
-            checkAnswer(event, uid){
-
-                this.questions.map(question =>{
-
-                    answer = question.answer
-                    for(var i=0; i<answer.length; i++){
-                        if(answer[i].answer==event.target.value){
-                            if(answer[i].is_correct){
-                                console.log('Your answer is correct!')
-                                alert("Hurray your answer is correct !????")
-                            }else{
-                                console.log('Your answer is wrong!')
-                                alert("Better luck next time !????")
-                            }
-                        }
-                    }
-
+            selectAnswer(uid) {
+                this.selectedAnswers[this.currentIndex] = uid;
+            },
+            nextQuestion() {
+                this.currentIndex++;
+            },
+            submitQuiz() {
+                fetch('/submit-quiz/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ answers: this.selectedAnswers })
                 })
-                console.log(event.target.value  , uid)
+                .then(response => {
+                    if (response.ok) {
+                        alert('Quiz submitted successfully!');
+                    } else {
+                        alert('Failed to submit quiz. Please try again later.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to submit quiz. Please try again later.');
+                });
             }
         },
         created() {
-            this.getQuestions( )
-         },
-      });
+            this.getQuestions();
+        }
+    });
 
-      app.mount('#app')
-  </script>
+    app.mount('#app');
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
 
 </body>
 </html>

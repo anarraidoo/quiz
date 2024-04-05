@@ -17,30 +17,77 @@ def start(request):
     return render(request, 'quiz.html')
 
 
+# def get_quiz(request):
+#     try:
+#         question_objs = Question.objects.all()
+#         question_objs = list(question_objs)
+#         data = []
+#         random.shuffle(question_objs)
+#
+#         for question_obj in question_objs:
+#             data.append({
+#                 "uid": question_obj.uid,
+#                 "question": question_obj.question,
+#                 "marks": question_obj.marks,
+#                 "answer": question_obj.get_answers(),
+#             })
+#
+#         payload = {'status': True, 'data': data}
+#
+#         return JsonResponse(payload)  # Return JsonResponse
+#
+#     except Exception as e:
+#         print(e)
+#         return HttpResponse("Something went wrong")
 def get_quiz(request):
     try:
-        question_objs = Question.objects.all()
+        # questions = Question.objects.all().prefetch_related('answers')
+        questions = Question.objects.all()
+        questions = list(questions)
+        random.shuffle(questions)
 
-        # if request.GET.get('gfg'):
-        # question_objs = question_objs.filter(gfg__gfg_name__icontains=request.GET.get('gfg'))
-
-        question_objs = list(question_objs)
         data = []
-        random.shuffle(question_objs)
-
-        for question_obj in question_objs:
+        for question in questions:
+            answers = [
+                {'uid': answer.uid, 'answer': answer.answer} for answer in question.answers.all()
+            ]
             data.append({
-                "uid": question_obj.uid,
-                "question": question_obj.question,
-                "marks": question_obj.marks,
-                "answer": question_obj.get_answers(),
+                'uid': question.uid,
+                'question': question.question,
+                'answers': answers,
             })
 
         payload = {'status': True, 'data': data}
-
-        return JsonResponse(payload)  # Return JsonResponse
+        return JsonResponse(payload)
 
     except Exception as e:
         print(e)
         return HttpResponse("Something went wrong")
 
+
+def calculate_personality_traits(selected_answers):
+    trait_A_score = sum(answer.trait_A_score for answer in selected_answers)
+    trait_B_score = sum(answer.trait_B_score for answer in selected_answers)
+    trait_C_score = sum(answer.trait_C_score for answer in selected_answers)
+    # Determine resulting personality trait based on scores
+    if trait_A_score >= trait_B_score and trait_A_score >= trait_C_score:
+        return 'A'
+    elif trait_B_score >= trait_A_score and trait_B_score >= trait_C_score:
+        return 'B'
+    else:
+        return 'C'
+
+
+def submit_quiz(request):
+    if request.method == 'POST':
+        selected_answers = request.POST.getlist('answers[]')
+        try:
+            selected_answers = Answer.objects.filter(uid__in=selected_answers)
+            # Here you can implement logic to calculate scores or personality traits based on the selected answers
+            # For example, you can iterate over selected_answers and calculate scores
+            personality_trait = calculate_personality_traits(selected_answers)
+            return JsonResponse({'status': True, 'personality_trait': personality_trait})  # You can return additional data as needed
+        except Answer.DoesNotExist:
+            return JsonResponse({'status': False, 'message': 'One or more selected answers do not exist.'}, status=400)
+
+    return HttpResponse("Invalid method")
