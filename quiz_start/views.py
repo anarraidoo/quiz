@@ -3,13 +3,13 @@
 # Create your views here.
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import *
 
 import random
 
 
 def quiz(request):
-    # context = {'gfg': request.GET.get('gfg')}
     return render(request, 'home.html')
 
 
@@ -17,31 +17,8 @@ def start(request):
     return render(request, 'quiz.html')
 
 
-# def get_quiz(request):
-#     try:
-#         question_objs = Question.objects.all()
-#         question_objs = list(question_objs)
-#         data = []
-#         random.shuffle(question_objs)
-#
-#         for question_obj in question_objs:
-#             data.append({
-#                 "uid": question_obj.uid,
-#                 "question": question_obj.question,
-#                 "marks": question_obj.marks,
-#                 "answer": question_obj.get_answers(),
-#             })
-#
-#         payload = {'status': True, 'data': data}
-#
-#         return JsonResponse(payload)  # Return JsonResponse
-#
-#     except Exception as e:
-#         print(e)
-#         return HttpResponse("Something went wrong")
 def get_quiz(request):
     try:
-        # questions = Question.objects.all().prefetch_related('answers')
         questions = Question.objects.all()
         questions = list(questions)
         random.shuffle(questions)
@@ -78,15 +55,14 @@ def calculate_personality_traits(selected_answers):
         return 'C'
 
 
+@ensure_csrf_cookie
 def submit_quiz(request):
     if request.method == 'POST':
         selected_answers = request.POST.getlist('answers[]')
         try:
             selected_answers = Answer.objects.filter(uid__in=selected_answers)
-            # Here you can implement logic to calculate scores or personality traits based on the selected answers
-            # For example, you can iterate over selected_answers and calculate scores
             personality_trait = calculate_personality_traits(selected_answers)
-            return JsonResponse({'status': True, 'personality_trait': personality_trait})  # You can return additional data as needed
+            return JsonResponse({'status': True, 'personality_trait': personality_trait})
         except Answer.DoesNotExist:
             return JsonResponse({'status': False, 'message': 'One or more selected answers do not exist.'}, status=400)
 
