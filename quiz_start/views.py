@@ -1,4 +1,5 @@
 # from django.shortcuts import render
+import json
 
 # Create your views here.
 from django.shortcuts import render, redirect
@@ -21,7 +22,7 @@ def get_quiz(request):
     try:
         questions = Question.objects.all()
         questions = list(questions)
-        random.shuffle(questions)
+        # random.shuffle(questions)
 
         data = []
         for question in questions:
@@ -43,13 +44,13 @@ def get_quiz(request):
 
 
 def calculate_personality_traits(selected_answers):
-    trait_A_score = sum(answer.trait_A_score for answer in selected_answers)
-    trait_B_score = sum(answer.trait_B_score for answer in selected_answers)
-    trait_C_score = sum(answer.trait_C_score for answer in selected_answers)
+    trait_a_score = sum(answer.trait_A_score for answer in selected_answers)
+    trait_b_score = sum(answer.trait_B_score for answer in selected_answers)
+    trait_c_score = sum(answer.trait_C_score for answer in selected_answers)
     # Determine resulting personality trait based on scores
-    if trait_A_score >= trait_B_score and trait_A_score >= trait_C_score:
+    if trait_a_score >= trait_b_score and trait_a_score >= trait_c_score:
         return 'A'
-    elif trait_B_score >= trait_A_score and trait_B_score >= trait_C_score:
+    elif trait_b_score >= trait_a_score and trait_b_score >= trait_c_score:
         return 'B'
     else:
         return 'C'
@@ -58,8 +59,10 @@ def calculate_personality_traits(selected_answers):
 @ensure_csrf_cookie
 def submit_quiz(request):
     if request.method == 'POST':
-        selected_answers = request.POST.getlist('answers[]')
+        # selected_answers = request.POST.getlist('answers[]')
         try:
+            data = json.loads(request.body)
+            selected_answers = data.get('answers', [])
             selected_answers = Answer.objects.filter(uid__in=selected_answers)
             personality_trait = calculate_personality_traits(selected_answers)
             return JsonResponse({'status': True, 'personality_trait': personality_trait})

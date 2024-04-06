@@ -11,22 +11,29 @@
 <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.prod.js"></script>
 
 <div id="app" class="container mt-5 pt-5">
+    <!-- TODO: Add images and background -->
     {% csrf_token %}
     <div class="col-md-6 mx-auto">
         <h3 v-if="questions.length === 0">Loading...</h3>
         <template v-else>
             <div v-if="currentIndex < questions.length">
                 <hr>
+                <!-- TODO: Create storyline questions -->
                 <p>[[ questions[currentIndex].question ]]</p>
                 <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
                     <input @change="selectAnswer(answer.uid)" class="form-check-input" type="radio" :id="'answer-' + answer.uid" name="answers[]" :value="answer.uid">
                     <label class="form-check-label" :for="'answer-' + answer.uid">[[ answer.answer ]]</label>
                 </div>
                 <button @click="nextQuestion" class="btn btn-primary mt-3">Next</button>
+                <!-- TODO: Add previous page button -->
             </div>
             <div v-else>
                 <p>No more questions</p>
                 <button @click="submitQuiz" class="btn btn-success mt-3">Submit Quiz</button>
+                <!-- TODO: Display result page-->
+                <form action="/quiz">
+                    <button type="submit" class="btn btn-danger mt-3">Restart Quiz</button>
+                </form>
             </div>
         </template>
     </div>
@@ -50,6 +57,7 @@
                     });
             },
             selectAnswer(uid) {
+                // console.log('Selected answer UID:', uid);
                 this.selectedAnswers[this.currentIndex] = uid;
             },
             nextQuestion() {
@@ -72,8 +80,9 @@
                     }
                 })
                 .then(data => {
+                    // console.log('Selected answers:', this.selectedAnswers);
                     const personalityTrait = data.personality_trait;
-                    console.log('Personality Trait: ', personalityTrait);
+                    // console.log('Personality Trait: ', personalityTrait);
                     alert('Quiz submitted successfully! Personality Trait: ' + personalityTrait);
                 })
                 .catch(error => {
@@ -93,17 +102,14 @@
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
-            // console.log('cookies:', cookies);
             for (let i = 0; i < cookies.length; i++) {
                 const cookie = cookies[i].trim();
-                // Does this cookie string begin with the name we want?
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
                 }
             }
         }
-        // console.log('CSRF token:', cookieValue);
         return cookieValue;
     }
 </script>
