@@ -4,7 +4,8 @@
         return {
             questions: [],
             currentIndex: 0,
-            selectedAnswers: []
+            selectedAnswers: [],
+            personalityTrait: ''
         };
     },
     methods: {
@@ -39,10 +40,12 @@
                 }
             })
             .then(data => {
-                // console.log('Selected answers:', this.selectedAnswers);
-                const personalityTrait = data.personality_trait;
-                // console.log('Personality Trait: ', personalityTrait);
-                alert('Quiz submitted successfully! Personality Trait: ' + personalityTrait);
+                document.getElementById('submit').style.display = 'none';
+                this.personalityTrait = data.personality_trait;
+                 console.log('Personality Trait: ', this.personalityTrait);
+                // alert('Quiz submitted successfully! Personality Trait: ' + personalityTrait);
+                document.querySelector('.result-image img').src = `/static/${this.personalityTrait}.png`;
+                document.getElementById('result').style.display = 'block';
             })
             .catch(error => {
                 console.error('Error:', error);

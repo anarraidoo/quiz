@@ -18,8 +18,9 @@
         <div class="col-md-6 mx-auto">
             <h3 v-if="questions.length === 0">Loading...</h3>
             <template v-else>
+
                 <div id="quiz" v-if="currentIndex < questions.length">
-<!--                    <hr>-->
+                    <br>
                     <!-- TODO: Create storyline questions -->
                     <p>[[ questions[currentIndex].question ]]</p>
                     <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
@@ -29,14 +30,24 @@
                     <button @click="nextQuestion" class="button btn-primary mt-3">Next</button>
                     <!-- TODO: Add previous page button -->
                 </div>
+
                 <div v-else>
-                    <p>No more questions</p>
-                    <button @click="submitQuiz" class="button mt-3">Submit Quiz</button>
-                    <!-- TODO: Display result page-->
+                    <div id="submit">
+                        <p>No more questions</p>
+                        <button @click="submitQuiz" class="button mt-3">Submit Quiz</button>
+                    </div>
+                    <div id="result" style="display: none;">
+                        <p>Your personality trait is: [[ personalityTrait ]]</p>
+                        <div class="result-image">
+<!--                            <img :src="`/static/${personalityTrait}.png`" alt="Result Image">-->
+                            <img src="" alt="Result Image">
+                        </div>
+                    </div>
                     <form action="/quiz">
-                        <button type="submit" class="button mt-3">Restart Quiz</button>
+                        <button type="submit" class="button mt-3" id="restart">Restart Quiz</button>
                     </form>
                 </div>
+
             </template>
         </div>
     </div>
