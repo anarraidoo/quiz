@@ -1,0 +1,89 @@
+:root {
+    --dl-color-gray-500: #595959;
+    --dl-color-gray-white: #FFFFFF;
+    --dl-color-gray-black: #000000;
+
+    --dl-size-size-large: 144px;
+    --dl-size-size-small: 48px;
+    --dl-size-size-medium: 96px;
+    --dl-size-size-xlarge: 192px;
+    --dl-size-size-xsmall: 16px;
+    --dl-size-size-xxlarge: 288px;
+    --dl-size-size-maxwidth: 1328px;
+
+    --dl-space-space-unit: 16px;
+    --dl-space-space-halfunit: 8px;
+    --dl-space-space-sixunits: 96px;
+    --dl-space-space-twounits: 32px;
+    --dl-space-space-fiveunits: 80px;
+    --dl-space-space-fourunits: 64px;
+    --dl-space-space-threeunits: 48px;
+    --dl-space-space-oneandhalfunits: 24px;
+
+    --dl-color-scheme-black: #0f1722ff;
+    --dl-color-scheme-brown: #914332ff;
+    --dl-color-scheme-white: #FFFFFF;
+    --dl-color-scheme-black80: #191919cc;
+    --dl-color-scheme-white80: #ffffffcc;
+    --dl-color-scheme-darkblue: #191919ff;
+    --dl-color-scheme-darkgray: #9095a7ff;
+    --dl-color-scheme-lightbrown: #f9f4f0ff;
+    --dl-color-scheme-lightblue: #162d5aff;
+
+    --dl-radius-radius-round: 50%;
+    --dl-radius-radius-radius2: 2px;
+    --dl-radius-radius-radius4: 4px;
+    --dl-radius-radius-radius8: 8px;
+
+    --dl-color-green-mint: #dfe7ddff;
+    --dl-color-green-applegreen: #96b38eff;
+
+    --dl-color-coffee-latte: #ddb892ff;
+    --dl-color-coffee-mocha: #9c6644ff;
+    --dl-color-coffee-coffee: #6f4e37ff;
+    --dl-color-coffee-yellow: #efc14cff;
+    --dl-color-coffee-expresso: #774936ff;
+    --dl-color-coffee-chocolate: #7f5539ff;
+    --dl-color-coffee-whitemocha: #e6ccb2ff;
+    --dl-color-coffee-dirtycoffee: #b08968ff;
+    --dl-color-coffee-chai: #bc8a5fff;
+}
+body{
+    width: 100%;
+    background-color: var(--dl-color-coffee-whitemocha);
+}
+.container {
+    width: 100%;
+    display: flex;
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: var(--dl-color-coffee-latte);
+}
+
+.button {
+    background-color: var(--dl-color-coffee-mocha);
+    border: none;
+    color: #ffffff;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--dl-color-coffee-dirtycoffee);
+    color: #000000;
+}
+
+#quiz p {
+    font-size: 22px;
+}
