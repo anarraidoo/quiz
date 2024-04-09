@@ -13,7 +13,6 @@
     <script src="https://unpkg.com/vue@3.0.0-rc.5/dist/vue.global.prod.js"></script>
 
     <div id="app" class="container mt-5 pt-5">
-        <!-- TODO: Add images and background -->
         {% csrf_token %}
         <div class="col-md-6 mx-auto">
             <h3 v-if="questions.length === 0">Loading...</h3>
@@ -22,9 +21,11 @@
                     <form id="quiz-form">
                         <br>
                         <!-- TODO: Create storyline questions -->
+                        <!-- TODO: Add visuals to questions -->
                         <div id="quiz-question">
                             <p>[[ questions[currentIndex].question ]]</p>
                             <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
+                                <!-- TODO: Change radio input to buttons -->
                                 <input @change="selectAnswer(answer.uid)" class="form-check-input" type="radio" :id="'answer-' + answer.uid" name="answers[]" :value="answer.uid" required>
                                 <label class="form-check-label" :for="'answer-' + answer.uid">[[ answer.answer ]]</label>
                             </div>
@@ -43,7 +44,7 @@
                         <div class="result-image">
 <!--                            <img src="{% static personalityTrait.png %}" alt="Result Image">-->
 <!--                            <img :src="`/static/${personalityTrait}.png`" alt="Result Image">-->
-                            <img src="" alt="Result Image">
+                            <img src="" alt="">
                         </div>
                     </div>
                     <form action="/quiz">
