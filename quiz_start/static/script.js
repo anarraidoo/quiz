@@ -60,7 +60,6 @@
                     this.personalityTrait = data.personality_trait;
                     console.log('Personality Trait: ', this.personalityTrait);
                     document.querySelector('.result-image img').src = `/static/${this.personalityTrait}.png`;
-                    document.querySelector('.result-image img').alt = `${this.personalityTrait}` + "-image";
                     document.getElementById('quiz-result').style.display = 'block';
                 })
                 .catch(error => {
