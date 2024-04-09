@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '$@)&r-egj@osk74pjws5*qk(0j4c@&giarmyfnryb_2zcf486%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://anarraidoo.github.io/quiz/']
 
 # Application definition
 
