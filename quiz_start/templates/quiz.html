@@ -18,27 +18,30 @@
         <div class="col-md-6 mx-auto">
             <h3 v-if="questions.length === 0">Loading...</h3>
             <template v-else>
-
                 <div id="quiz" v-if="currentIndex < questions.length">
-                    <br>
-                    <!-- TODO: Create storyline questions -->
-                    <p>[[ questions[currentIndex].question ]]</p>
-                    <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
-                        <input @change="selectAnswer(answer.uid)" class="form-check-input" type="radio" :id="'answer-' + answer.uid" name="answers[]" :value="answer.uid">
-                        <label class="form-check-label" :for="'answer-' + answer.uid">[[ answer.answer ]]</label>
-                    </div>
-                    <button @click="nextQuestion" class="button btn-primary mt-3">Next</button>
-                    <!-- TODO: Add previous page button -->
+                    <form id="quiz-form">
+                        <br>
+                        <!-- TODO: Create storyline questions -->
+                        <div id="quiz-question">
+                            <p>[[ questions[currentIndex].question ]]</p>
+                            <div class="form-check" v-for="answer in questions[currentIndex].answers" :key="answer.uid">
+                                <input @change="selectAnswer(answer.uid)" class="form-check-input" type="radio" :id="'answer-' + answer.uid" name="answers[]" :value="answer.uid" required>
+                                <label class="form-check-label" :for="'answer-' + answer.uid">[[ answer.answer ]]</label>
+                            </div>
+                        </div>
+                        <div class="button-container">
+                            <button @click="prevQuestion" class="button btn-primary mt-3">Previous</button>
+                            <button @click="nextQuestion($event)" class="button btn-primary mt-3" id="next">Next</button>
+                            <button @click="submitQuiz" class="button btn-primary mt-3" id="submit" style="display:none;">Submit Quiz</button>
+                        </div>
+                    </form>
                 </div>
 
                 <div v-else>
-                    <div id="submit">
-                        <p>No more questions</p>
-                        <button @click="submitQuiz" class="button mt-3">Submit Quiz</button>
-                    </div>
-                    <div id="result" style="display: none;">
+                    <div id="quiz-result" style="display: none;">
                         <p>Your personality trait is: [[ personalityTrait ]]</p>
                         <div class="result-image">
+<!--                            <img src="{% static personalityTrait.png %}" alt="Result Image">-->
 <!--                            <img :src="`/static/${personalityTrait}.png`" alt="Result Image">-->
                             <img src="" alt="Result Image">
                         </div>
@@ -52,5 +55,9 @@
         </div>
     </div>
     <script src="{% static 'script.js' %}"></script>
+
+    <script>
+
+    </script>
 </body>
 </html>

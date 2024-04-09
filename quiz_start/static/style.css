@@ -87,3 +87,10 @@ body{
 #quiz p {
     font-size: 22px;
 }
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    justify-content: center;
+}
