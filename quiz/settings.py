@@ -24,7 +24,7 @@ SECRET_KEY = '$@)&r-egj@osk74pjws5*qk(0j4c@&giarmyfnryb_2zcf486%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://anarraidoo.github.io/quiz/']
+ALLOWED_HOSTS = []
 
 # Application definition
 
