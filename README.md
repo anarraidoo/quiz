@@ -14,7 +14,7 @@ Current link: [Struggurl Quiz](anarraidoo.pythonanywhere.com)
 
 Inspired by MBTI, Cake resume, Likka's Ice Cream Personality Quiz, and IseeJ's CosmosPersona.
 
-Implemented with HTML, CSS, JS, Vue.js, and Django.
+Implemented with HTML, CSS, JS, Bootstrap, Vue.js and Django.
 
 ## Deployment
 * Cloned to [PythonAnywhere](https://www.pythonanywhere.com)
